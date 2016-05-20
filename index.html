@@ -1,0 +1,84 @@
+<!-- Based on the nice tutorial by desandro:
+          http://desandro.github.io/3dtransforms/docs/cube.html
+!-->
+
+<style>
+.container {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    margin: 0 auto 40px;
+    text-align: center;
+    -webkit-perspective: 1000px;
+    -moz-perspective: 1000px;
+    -o-perspective: 1000px;
+    perspective: 1000px;
+}
+
+#cube {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transition: -webkit-transform 1s;
+    -moz-transition: -moz-transform 1s;
+    -o-transition: -o-transform 1s;
+    transition: transform 1s;
+}
+
+#cube figure {
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0; 
+    border-left: 150px solid #f0ad4e;
+    border-top: 75px solid transparent;
+    border-bottom: 75px solid transparent;
+    font-size: 220px;
+}
+
+#cube.panels-backface-invisible figure {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+
+#cube .right  { border-color: transparent transparent transparent hsla( 120, 100%, 50%, 0.7 );}
+#cube .left   { border-color: transparent transparent transparent hsla( 180, 100%, 50%, 0.7 ); }
+#cube .top    { border-color: transparent transparent transparent hsla( 240, 100%, 50%, 0.7 ); }
+#cube .bottom { border-color: transparent transparent transparent hsla( 300, 100%, 50%, 0.7 ); }
+
+/*#cube .right  { transform: rotateY(  90deg ) translateZ( 100px ); }*/
+/*#cube .left   { transform: rotateY( -90deg ) translateZ( 100px ); }*/
+#cube .top    { transform: rotateX(45deg) rotateZ(-90deg) translateX( -50px ) translateZ(-17px); }
+#cube .bottom { transform: rotateX( -90deg ) rotateZ( 90deg) translateZ( 100px ); }
+
+</style>
+
+<section class="container">
+    <div id="cube">
+        <!-- <figure class="right"></figure> -->
+        <!-- <figure class="left"></figure> -->
+        <figure class="top"></figure>
+        <figure class="bottom"></figure>
+    </div>
+</section>
+
+<script>
+document.onmousemove = function (e) {
+    var x = e.clientX - innerWidth/2,
+        y = e.clientY - innerHeight/2,
+        yawn = x / innerWidth * 180, // Direita, Esquerda
+        pitch = y / innerHeight * 180; // Cima, Baixo
+
+    // document.querySelector('#cube .right').style.transform = 'rotateX( '+ (0+pitch) +'deg ) rotateY( '+ (90+yawn) +'deg ) translateZ( 100px )';
+    // document.querySelector('#cube .left').style.transform = 'rotateX( '+ (0+pitch) +'deg ) rotateY( '+ (-90+yawn) +'deg ) translateZ( 100px )';
+    document.querySelector('#cube .top').style.transform = 'rotateX( '+ (45+pitch) +'deg ) rotateY('+ (-yawn) +'deg) rotateZ(-90deg) translateX( -50px ) translateZ('+ (yawn > 0 ? (-17 + yawn/1.1) : (-17 - yawn/1.1))+'px)';
+    document.querySelector('#cube .bottom').style.transform = 'rotateX( '+ (-90+pitch) +'deg ) rotateZ( '+ ( 90-yawn) +'deg ) translateZ( 100px )';
+};
+</script>
