@@ -103,21 +103,29 @@ function draw() {
 
     // face
     gl.uniform3f( uNormal, 0, 0, -1 );
-    drawPrimitive( gl.TRIANGLE_FAN, [0.3,0.8,0.2,1], [ -1,-1,1, 1,-1,1, 0,1,0 ]);
-    drawPrimitive( gl.TRIANGLE_FAN, [1,0,0,0], [ -1,-1,1, 1,-1,1, 0,-1,-1 ]);
-    // dureita
-    // gl.uniform3f( uNormal, 0, 1, 0 );
-    // drawPrimitive( gl.TRIANGLE_FAN, [0,0,1,1], [ 1,-1,1, 0,-1,-1, 0,1,0 ]);
+    drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, -0.7, 0.7, 1, -0.7, 0.7, 0, 1, 0]);
+    drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, -0.7, 0.7, 0, 1, 0, 1, -0.7, 0.7]);
+    // direita
+    gl.uniform3f(uNormal, 0, 1, 0);
+    drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [1, -0.7, 0.7, 0, -0.7, -1, 0, 1, 0]);
+    drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [0, -0.7, -1, 1, -0.7, 0.7, 0, 1, 0]);
     // esquerda
-    gl.uniform3f( uNormal, 0, -1, 0 );
-    drawPrimitive( gl.TRIANGLE_FAN, [0,1,0,0], [ -1,-1,1, 0,1,0, 0,-1,-1 ]);
+    gl.uniform3f(uNormal, 0, -1, 0);
+    drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, -0.7, 0.7, 0, 1, 0, 0, -0.7, -1]);
+    drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, -0.7, 0.7, 0, -0.7, -1, 0, 1, 0]);
     // base
     gl.uniform3f( uNormal, 0, -1, 0 );
-    drawPrimitive( gl.TRIANGLE_FAN, [1,0,0,0], [ -1,-1,1, 0,-1,-1, 1,-1,1 ]);
+    drawPrimitive( gl.TRIANGLE_FAN, [1,0,0,0], [ -1,-0.7,0.7, 0,-0.7,-1, 1,-0.7,0.7 ]);
+    drawPrimitive( gl.TRIANGLE_FAN, [1,0,0,0], [ -1,-0.7,0.7, 1,-0.7,0.7, 0,-0.7,-1 ]);
 
     gl.uniform1i( uLit, 0 );  // The lines representing the coordinate axes are not lit.
 
+    gl.lineWidth(4);
+    drawPrimitive(gl.LINES, [1, 0, 0, 1], [-2, 0, 0, 2, 0, 0]);
+    drawPrimitive(gl.LINES, [0, 1, 0, 1], [0, -2, 0, 0, 2, 0]);
+    drawPrimitive(gl.LINES, [0, 0, 1, 1], [0, 0, -2, 0, 0, 2]);
     gl.lineWidth(1);
+
 }
 
 /* Creates a program for use in the WebGL context gl, and returns the
