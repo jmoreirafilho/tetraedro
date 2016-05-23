@@ -1,44 +1,43 @@
+
 <!DOCTYPE html>
 <meta charset="UTF-8">
 <html>
 <head>
-<title>WebGL Cube with Mouse Rotation</title>
-
-<script type="x-shader/x-vertex" id="vshader">
-     attribute vec3 coords;
-     uniform mat4 modelview;
-     uniform mat4 projection;
-     uniform bool lit;
-     uniform vec3 normal;
-     uniform mat3 normalMatrix;
-     uniform vec4 color;
-     varying vec4 vColor;
-     void main() {
+    <title>WebGL Cube with Mouse Rotation</title>
+    <script type="x-shader/x-vertex" id="vshader">
+        attribute vec3 coords;
+        uniform mat4 modelview;
+        uniform mat4 projection;
+        uniform bool lit;
+        uniform vec3 normal;
+        uniform mat3 normalMatrix;
+        uniform vec4 color;
+        varying vec4 vColor;
+        void main() {
         vec4 coords = vec4(coords,1.0);
         vec4 transformedVertex = modelview * coords;
         gl_Position = projection * transformedVertex;
         if (lit) {
-           vec3 unitNormal = normalize(normalMatrix*normal);
-           float multiplier = abs(unitNormal.z);
-           vColor = vec4( multiplier*color.r, multiplier*color.g, multiplier*color.b, color.a );
+        vec3 unitNormal = normalize(normalMatrix*normal);
+        float multiplier = abs(unitNormal.z);
+        vColor = vec4( multiplier*color.r, multiplier*color.g, multiplier*color.b, color.a );
         }
         else {
-            vColor = color;
+        vColor = color;
         }
-     }
-</script>
-<script type="x-shader/x-fragment" id="fshader">
-     precision mediump float;
-     varying vec4 vColor;
-     void main() {
-         gl_FragColor = vColor;
-     }
-</script>
+        }
+    </script>
+    <script type="x-shader/x-fragment" id="fshader">
+        precision mediump float;
+        varying vec4 vColor;
+        void main() {
+        gl_FragColor = vColor;
+        }
+    </script>
 
-
-<script type="text/javascript" src="gl-matrix-min.js"></script>
-<script type="text/javascript" src="simple-rotator.js"></script>
-<script type="text/javascript">
+    <script type="text/javascript" src="gl-matrix-min.js"></script>
+    <script type="text/javascript" src="simple-rotator.js"></script>
+    <script type="text/javascript">
 
 var gl;   // The webgl context.
 
@@ -81,10 +80,10 @@ function drawPrimitive( primitiveType, color, vertices ) {
  * (Note that the use of the above drawPrimitive function is not an efficient
  * way to draw with WebGL.  Here, the geometry is so simple that it doesn't matter.)
  */
-function draw() { 
+function draw() {
     gl.clearColor(1,1,1,0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    
+
     if (document.getElementById("persproj").checked) {
          mat4.perspective(projection, Math.PI/4, 1, 2, 10);
     }
@@ -98,21 +97,20 @@ function draw() {
 
     mat3.normalFromMat4(normalMatrix, modelview);
     gl.uniformMatrix3fv(uNormalMatrix, false, normalMatrix);
+    gl.uniform1i( uLit, 0 );  // Turn on lighting calculations for the cube.
 
-    gl.uniform3f( uNormal, 1, 1, 1 );
-    gl.uniform1i( uLit, 0 );  // The lines representing the coordinate axes are not lit.
+    gl.uniform3f( uNormal, 0, 0, -1 );
 
+    gl.lineWidth(4);
+    drawPrimitive(gl.LINES, [0, 0, 1, 1], [1, 0, 0.7, 0, 1.3, 0]);
+    drawPrimitive(gl.LINES, [0, 0, 1, 1], [1, 0, 0.7, 0, -1.3, 0]);
+    drawPrimitive(gl.LINES, [0, 0, 1, 1], [-1, 0, 0.7, 0, 1.3, 0]);
+
+    drawPrimitive(gl.LINES, [1, 0, 0, 1], [0, 0, -1, 0, 1.3, 0]);
+    drawPrimitive(gl.LINES, [1, 0, 0, 1], [-1, 0, 0.7, 0, -1.3, 0]);
+    drawPrimitive(gl.LINES, [1, 0, 0, 1], [0, 0, -1, 0, -1.3, 0]);
     gl.lineWidth(1);
-    drawPrimitive(gl.LINES, [0, 0, 1, 1], [0, -0.7, -1, 0, 1, 0]);
-    drawPrimitive(gl.LINES, [0, 0, 1, 1], [0, 1, 0, -1, -0.7, 0.7]);
-    drawPrimitive(gl.LINES, [0, 0, 1, 1], [1, -0.7, 0.7, 0, 1, 0]);
-    
-    gl.lineWidth(5);
 
-    drawPrimitive(gl.LINES, [1, 0, 0, 1], [-1, -0.7, 0.7, 1, -0.7, 0.7]);
-    drawPrimitive(gl.LINES, [1, 0, 0, 1], [1, -0.7, 0.7, 0, -0.7, -1]);
-    drawPrimitive(gl.LINES, [1, 0, 0, 1], [-1, -0.7, 0.7, 0, -0.7, -1]);
-    gl.lineWidth(5);
 }
 
 /* Creates a program for use in the WebGL context gl, and returns the
@@ -179,7 +177,7 @@ function init() {
         if ( ! gl ) {
             throw "Could not create WebGL context.";
         }
-        var vertexShaderSource = getTextContent("vshader"); 
+        var vertexShaderSource = getTextContent("vshader");
         var fragmentShaderSource = getTextContent("fshader");
         var prog = createProgram(gl,vertexShaderSource,fragmentShaderSource);
         gl.useProgram(prog);
@@ -205,29 +203,26 @@ function init() {
    draw();
 }
 
-function addColor() {
+
+function removeColor() {
   rotator.setView( [1.45,0.5,1], [0,1,0], 7 );
   draw();
   setTimeout(function(){
-    window.location = "index.html";
+    window.location = "losang.html";
   });
 }
 
-</script>
+    </script>
 </head>
 <body onload="init()">
+    <p name="projectionType" id="persproj" onload="draw()">
+        <button onclick="rotator.setView( [1.45,0.5,1], [0,1,0], 7 ); draw()" style="margin-left:1cm">Reset View</button>          <button onclick="removeColor()" style="margin-left:1cm">Colorir</button>
 
-<p name="projectionType" id="persproj" onload="draw()">
-  <button onclick="rotator.setView( [1.45,0.5,1], [0,1,0], 7 ); draw()" style="margin-left:1cm">Reset View</button>
-  <button onclick="addColor()" style="margin-left:1cm">Colorir</button>
-</p>
-
-<noscript><hr><h3>This page requires Javascript and a web browser that supports WebGL</h3><hr></noscript>
-
-<div style="cursor:pointer;">
-   <canvas width="600px" height="600px" id="glcanvas" style="background-color:red"></canvas>
-</div>
-
+    </p>
+    <noscript><hr><h3>This page requires Javascript and a web browser that supports WebGL</h3><hr></noscript>
+    <div style="cursor:pointer;">
+        <canvas width="600px" height="600px" id="glcanvas" style="background-color:red"></canvas>
+    </div>
 
 </body>
 </html>
