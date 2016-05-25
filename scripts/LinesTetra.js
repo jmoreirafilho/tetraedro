@@ -1,47 +1,5 @@
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<html>
-<head>
-<title>WebGL Cube with Mouse Rotation</title>
-
-<script type="x-shader/x-vertex" id="vshader">
-     attribute vec3 coords;
-     uniform mat4 modelview;
-     uniform mat4 projection;
-     uniform bool lit;
-     uniform vec3 normal;
-     uniform mat3 normalMatrix;
-     uniform vec4 color;
-     varying vec4 vColor;
-     void main() {
-        vec4 coords = vec4(coords,1.0);
-        vec4 transformedVertex = modelview * coords;
-        gl_Position = projection * transformedVertex;
-        if (lit) {
-           vec3 unitNormal = normalize(normalMatrix*normal);
-           float multiplier = abs(unitNormal.z);
-           vColor = vec4( multiplier*color.r, multiplier*color.g, multiplier*color.b, color.a );
-        }
-        else {
-            vColor = color;
-        }
-     }
-</script>
-<script type="x-shader/x-fragment" id="fshader">
-     precision mediump float;
-     varying vec4 vColor;
-     void main() {
-         gl_FragColor = vColor;
-     }
-</script>
-
-
-<script type="text/javascript" src="scripts/gl-matrix-min.js"></script>
-<script type="text/javascript" src="scripts/simple-rotator.js"></script>
-<script type="text/javascript">
-
 function  LinesTetra () {};
-
+      
 var gl;   // The webgl context.
 
 var aCoords;           // Location of the coords attribute variable in the shader program.
@@ -58,7 +16,6 @@ var modelview = mat4.create();    // modelview matrix
 var normalMatrix = mat3.create(); // matrix, derived from modelview matrix, for transforming normal vectors
 
 var rotator;   // A SimpleRotator object to enable rotation by mouse dragging.
-
 /* Draws a WebGL primitive.  The first parameter must be one of the constants
  * that specifiy primitives:  gl.POINTS, gl.LINES, gl.LINE_LOOP, gl.LINE_STRIP,
  * gl.TRIANGLES, gl.TRIANGLE_STRIP, gl.TRIANGLE_FAN.  The second parameter must
@@ -86,8 +43,7 @@ LinesTetra.prototype.drawPrimitive = function( primitiveType, color, vertices ) 
 LinesTetra.prototype.draw = function() { 
     gl.clearColor(1,1,1,0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    
-    if (document.getElementById("persproj").checked) {
+    if ($("#persproj")[0].checked) {
          mat4.perspective(projection, Math.PI/4, 1, 2, 10);
     }
     else {
@@ -153,7 +109,7 @@ LinesTetra.prototype.createProgram = function(gl, vertexShaderSource, fragmentSh
  * it.  The parameter should be the id of the script element.
  */
 LinesTetra.prototype.getTextContent = function( elementID ) {
-    var element = document.getElementById(elementID);
+    var element = $("script#"+elementID)[0];
     var fsource = "";
     var node = element.firstChild;
     var str = "";
@@ -173,17 +129,18 @@ LinesTetra.prototype.getTextContent = function( elementID ) {
  */
 LinesTetra.prototype.init = function() {
    try {
-        var canvas = document.getElementById("glcanvas");
+        var canvas = $("#tetraLinesStep")[0];
         gl = canvas.getContext("webgl");
+        console.log(gl);
         if ( ! gl ) {
             gl = canvas.getContext("experimental-webgl");
         }
         if ( ! gl ) {
             throw "Could not create WebGL context.";
         }
-        var vertexShaderSource = LinesTetra.prototype.getTextContent("vshader"); 
-        var fragmentShaderSource = LinesTetra.prototype.getTextContent("fshader");
-        var prog = LinesTetra.prototype.createProgram(gl,vertexShaderSource,fragmentShaderSource);
+        var vertexShaderSource = this.getTextContent("vshader"); 
+        var fragmentShaderSource = this.getTextContent("fshader");
+        var prog = this.createProgram(gl,vertexShaderSource,fragmentShaderSource);
         gl.useProgram(prog);
         aCoords =  gl.getAttribLocation(prog, "coords");
         uModelview = gl.getUniformLocation(prog, "modelview");
@@ -195,41 +152,23 @@ LinesTetra.prototype.init = function() {
         aCoordsBuffer = gl.createBuffer();
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);  // no need to draw back faces
-        document.getElementById("persproj").checked = true;
-        rotator = new SimpleRotator(canvas,LinesTetra.prototype.draw);
+        $("#persproj")[0].checked = true;
+        rotator = new SimpleRotator(canvas,this.draw);
         rotator.setView( [1.45,0.5,1], [0,1,0], 7 );
    }
    catch (e) {
-      document.getElementById("message").innerHTML =
+    console.log(e);
+      $("#message").text =
            "Could not initialize WebGL: " + e;
       return;
    }
-   LinesTetra.prototype.draw();
+   this.draw();
 }
 
 LinesTetra.prototype.addColor = function() {
   rotator.setView( [1.45,0.5,1], [0,1,0], 7 );
-  draw();
-  setTimeout(function(){
-    window.location = "index.html";
-  });
+  this.draw();
+  // setTimeout(function(){
+  //   window.location = "/index.html";
+  // });
 }
-
-</script>
-</head>
-<body onload="LinesTetra.prototype.init()">
-
-<p name="projectionType" id="persproj" onload="LinesTetra.prototype.draw()">
-  <button onclick="rotator.setView( [1.45,0.5,1], [0,1,0], 7 ); LinesTetra.prototype.draw()" style="margin-left:1cm">Reset View</button>
-  <button onclick="addColor()" style="margin-left:1cm">Colorir</button>
-</p>
-
-<noscript><hr><h3>This page requires Javascript and a web browser that supports WebGL</h3><hr></noscript>
-
-<div style="cursor:pointer;">
-   <canvas width="600px" height="600px" id="glcanvas" style="background-color:red"></canvas>
-</div>
-
-
-</body>
-</html>
