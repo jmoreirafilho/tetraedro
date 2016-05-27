@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>WebGL Application</title>
+    <script type="x-shader/x-vertex" id="vshader">
+     attribute vec3 coords;
+     uniform mat4 modelview;
+     uniform mat4 projection;
+     uniform bool lit;
+     uniform vec3 normal;
+     uniform mat3 normalMatrix;
+     uniform vec4 color;
+     varying vec4 vColor;
+     void main() {
+        vec4 coords = vec4(coords,1.0);
+        vec4 transformedVertex = modelview * coords;
+        gl_Position = projection * transformedVertex;
+        if (lit) {
+           vec3 unitNormal = normalize(normalMatrix*normal);
+           float multiplier = abs(unitNormal.z);
+           vColor = vec4( multiplier*color.r, multiplier*color.g, multiplier*color.b, color.a );
+        }
+        else {
+            vColor = color;
+        }
+     }
+    </script>
+    <script type="x-shader/x-fragment" id="fshader">
+      precision mediump float;
+      varying vec4 vColor;
+      void main() {
+        gl_FragColor = vColor;
+      }
+    </script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/home.css">
+    <script type="text/javascript" src="../js/gl-matrix-min.js"></script>
+    <script type="text/javascript" src="../js/simple-rotator.js"></script>
+  </head>
+  <body onload="LinesTetra.prototype.init()">
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- OPÇÕES DO MENU -->
+        <div class="col-lg-1 menu-bar">
+          <div class="menu-item" id="home" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Início"></div>
+          <div class="menu-item" id="animateTetra" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Animação Tetraedro"></div>
+          <div class="menu-item" id="linesTetra" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Linhas 3D Tetraedro"></div>
+          <div class="menu-item" id="tetra" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Tetraedro 3D"></div>
+          <div class="menu-item" id="animateOcta" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Animação Octaedro"></div>
+          <div class="menu-item" id="linesOcta" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Linhas 3D Octaedro"></div>
+          <div class="menu-item" id="octa" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Octaedro 3D"></div>
+        </div>
+        <!-- OPÇÕES DO MENU -->
+
+        <!-- CONTEUDO -->
+        <div class="col-lg-offset-1 col-lg-11 text-center">
+
+          <p name="projectionType" id="persproj" onload="LinesTetra.prototype.draw()">
+            <button onclick="rotator.setView( [1.45,0.5,1], [0,1,0], 7 ); LinesTetra.prototype.draw()" style="margin-left:1cm">Reset View</button>
+            <button onclick="addColor()" style="margin-left:1cm">Colorir</button>
+          </p>
+
+          <noscript><hr><h3>This page requires Javascript and a web browser that supports WebGL</h3><hr></noscript>
+
+          <div style="cursor:pointer;">
+            <canvas width="600px" height="600px" id="glcanvas" style="background-color:red"></canvas>
+          </div>
+        </div>
+        <!-- CONTEUDO -->
+
+      </div>
+    </div>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/base.js"></script>
+    <script type="text/javascript" src="../js/pages/3dLinesTetra.js"></script>
+    <script>
+      $(document).ready(function(){
+          $('[data-toggle="popover"]').popover(); 
+      });
+    </script>
+
+
+</body>
+</html>

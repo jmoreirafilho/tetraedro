@@ -1,0 +1,21 @@
+.menu-bar {
+	background-color: #42A5F5;
+	position:fixed;
+	padding:0px;
+	height:100%;
+}
+
+.menu-item {
+	cursor:pointer;
+	width:80px;
+	height:80px;
+	margin-left:calc(50% - 40px);
+	margin-top:10px;
+	background-color:#FFF;
+	border-radius:150px;
+}
+
+.popover {
+	width:100px;
+	text-align:center;
+}

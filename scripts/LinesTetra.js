@@ -1,4 +1,3 @@
-function  LinesTetra () {};
       
 var gl;   // The webgl context.
 
@@ -26,6 +25,7 @@ var rotator;   // A SimpleRotator object to enable rotation by mouse dragging.
  * location of a color uniform in the shader program, aCoords is the location of
  * the coords attribute, and aCoordsBuffer is a VBO for the coords attribute.
  */
+function  LinesTetra () {};
 LinesTetra.prototype.drawPrimitive = function( primitiveType, color, vertices ) {
      gl.enableVertexAttribArray(aCoords);
      gl.bindBuffer(gl.ARRAY_BUFFER,aCoordsBuffer);
@@ -131,7 +131,6 @@ LinesTetra.prototype.init = function() {
    try {
         var canvas = $("#tetraLinesStep")[0];
         gl = canvas.getContext("webgl");
-        console.log(gl);
         if ( ! gl ) {
             gl = canvas.getContext("experimental-webgl");
         }
@@ -157,7 +156,6 @@ LinesTetra.prototype.init = function() {
         rotator.setView( [1.45,0.5,1], [0,1,0], 7 );
    }
    catch (e) {
-    console.log(e);
       $("#message").text =
            "Could not initialize WebGL: " + e;
       return;

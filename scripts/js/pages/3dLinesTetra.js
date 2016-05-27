@@ -1,44 +1,30 @@
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<html>
-<head>
-<title>WebGL Cube with Mouse Rotation</title>
+$("#home").on('click', function(){
+	window.location = "../../inicio.html";
+});
 
-<script type="x-shader/x-vertex" id="vshader">
-     attribute vec3 coords;
-     uniform mat4 modelview;
-     uniform mat4 projection;
-     uniform bool lit;
-     uniform vec3 normal;
-     uniform mat3 normalMatrix;
-     uniform vec4 color;
-     varying vec4 vColor;
-     void main() {
-        vec4 coords = vec4(coords,1.0);
-        vec4 transformedVertex = modelview * coords;
-        gl_Position = projection * transformedVertex;
-        if (lit) {
-           vec3 unitNormal = normalize(normalMatrix*normal);
-           float multiplier = abs(unitNormal.z);
-           vColor = vec4( multiplier*color.r, multiplier*color.g, multiplier*color.b, color.a );
-        }
-        else {
-            vColor = color;
-        }
-     }
-</script>
-<script type="x-shader/x-fragment" id="fshader">
-     precision mediump float;
-     varying vec4 vColor;
-     void main() {
-         gl_FragColor = vColor;
-     }
-</script>
+$("#animateTetra").on('click', function(){
+	window.location = "../pages/animateTetra.html";
+});
 
+$("#linesTetra").on('click', function(){
+	window.location = "../pages/3dLinesTetra.html";
+});
 
-<script type="text/javascript" src="scripts/gl-matrix-min.js"></script>
-<script type="text/javascript" src="scripts/simple-rotator.js"></script>
-<script type="text/javascript">
+$("#tetra").on('click', function(){
+	window.location = "../pages/tetra.html";
+});
+
+$("#animateOcta").on('click', function(){
+	//
+});
+
+$("#linesOcta").on('click', function(){
+	window.location = "../pages/3dLinesOcta.html";
+});
+
+$("#octa").on('click', function(){
+	window.location = "../pages/octa.html";
+});
 
 function  LinesTetra () {};
 
@@ -214,22 +200,3 @@ LinesTetra.prototype.addColor = function() {
     window.location = "index.html";
   });
 }
-
-</script>
-</head>
-<body onload="LinesTetra.prototype.init()">
-
-<p name="projectionType" id="persproj" onload="LinesTetra.prototype.draw()">
-  <button onclick="rotator.setView( [1.45,0.5,1], [0,1,0], 7 ); LinesTetra.prototype.draw()" style="margin-left:1cm">Reset View</button>
-  <button onclick="addColor()" style="margin-left:1cm">Colorir</button>
-</p>
-
-<noscript><hr><h3>This page requires Javascript and a web browser that supports WebGL</h3><hr></noscript>
-
-<div style="cursor:pointer;">
-   <canvas width="600px" height="600px" id="glcanvas" style="background-color:red"></canvas>
-</div>
-
-
-</body>
-</html>

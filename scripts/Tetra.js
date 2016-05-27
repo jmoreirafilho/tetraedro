@@ -1,6 +1,6 @@
 function Tetra () {};
 
-if($("#tetraStep")[0]){
+if($("#tetraStep")[0] && ){
 var c = $("#tetraStep")[0];
 var ctx = c.getContext("2d");
 var step = 0;
