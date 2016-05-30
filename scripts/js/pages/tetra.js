@@ -1,43 +1,32 @@
+$("#home").on('click', function(){
+  window.location = "../../inicio.html";
+});
 
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<html>
-<head>
-    <title>WebGL Cube with Mouse Rotation</title>
-    <script type="x-shader/x-vertex" id="vshader">
-        attribute vec3 coords;
-        uniform mat4 modelview;
-        uniform mat4 projection;
-        uniform bool lit;
-        uniform vec3 normal;
-        uniform mat3 normalMatrix;
-        uniform vec4 color;
-        varying vec4 vColor;
-        void main() {
-        vec4 coords = vec4(coords,1.0);
-        vec4 transformedVertex = modelview * coords;
-        gl_Position = projection * transformedVertex;
-        if (lit) {
-        vec3 unitNormal = normalize(normalMatrix*normal);
-        float multiplier = abs(unitNormal.z);
-        vColor = vec4( multiplier*color.r, multiplier*color.g, multiplier*color.b, color.a );
-        }
-        else {
-        vColor = color;
-        }
-        }
-    </script>
-    <script type="x-shader/x-fragment" id="fshader">
-        precision mediump float;
-        varying vec4 vColor;
-        void main() {
-        gl_FragColor = vColor;
-        }
-    </script>
+$("#animateTetra").on('click', function(){
+  window.location = "../pages/animateTetra.html";
+});
 
-    <script type="text/javascript" src="../js/gl-matrix-min.js"></script>
-    <script type="text/javascript" src="../js/simple-rotator.js"></script>
-    <script type="text/javascript">
+$("#linesTetra").on('click', function(){
+  window.location = "../pages/3dLinesTetra.html";
+});
+
+$("#tetra").on('click', function(){
+  window.location = "../pages/tetra.html";
+});
+
+$("#animateOcta").on('click', function(){
+  //
+});
+
+$("#linesOcta").on('click', function(){
+  window.location = "../pages/3dLinesOcta.html";
+});
+
+$("#octa").on('click', function(){
+  window.location = "../pages/octa.html";
+});
+
+function Tetra3d() { };
 
 var gl;   // The webgl context.
 
@@ -56,8 +45,6 @@ var normalMatrix = mat3.create(); // matrix, derived from modelview matrix, for 
 
 var rotator;   // A SimpleRotator object to enable rotation by mouse dragging.
 
-function Octa3d() { };
-
 /* Draws a WebGL primitive.  The first parameter must be one of the constants
  * that specifiy primitives:  gl.POINTS, gl.LINES, gl.LINE_LOOP, gl.LINE_STRIP,
  * gl.TRIANGLES, gl.TRIANGLE_STRIP, gl.TRIANGLE_FAN.  The second parameter must
@@ -68,7 +55,7 @@ function Octa3d() { };
  * location of a color uniform in the shader program, aCoords is the location of
  * the coords attribute, and aCoordsBuffer is a VBO for the coords attribute.
  */
-function drawPrimitive( primitiveType, color, vertices ) {
+Tetra3d.prototype.drawPrimitive = function( primitiveType, color, vertices ) {
      gl.enableVertexAttribArray(aCoords);
      gl.bindBuffer(gl.ARRAY_BUFFER,aCoordsBuffer);
      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STREAM_DRAW);
@@ -82,10 +69,10 @@ function drawPrimitive( primitiveType, color, vertices ) {
  * (Note that the use of the above drawPrimitive function is not an efficient
  * way to draw with WebGL.  Here, the geometry is so simple that it doesn't matter.)
  */
-function draw() {
+Tetra3d.prototype.draw = function() { 
     gl.clearColor(1,1,1,0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+    
     if (document.getElementById("persproj").checked) {
          mat4.perspective(projection, Math.PI/4, 1, 2, 10);
     }
@@ -101,38 +88,27 @@ function draw() {
     gl.uniformMatrix3fv(uNormalMatrix, false, normalMatrix);
     gl.uniform1i( uLit, 0 );  // Turn on lighting calculations for the cube.
 
-    // faceSup
+    // face
     gl.uniform3f( uNormal, 0, 0, -1 );
-    drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, 0, 0.7, 1, 0, 0.7, 0, 1.3, 0]);
-    drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, 0, 0.7, 0, 1.3, 0, 1, 0, 0.7]);
-    // direitaSup
+    Tetra3d.prototype.drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, -0.7, 0.7, 1, -0.7, 0.7, 0, 1, 0]);
+    Tetra3d.prototype.drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, -0.7, 0.7, 0, 1, 0, 1, -0.7, 0.7]);
+    // direita
     gl.uniform3f(uNormal, 0, 1, 0);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [1, 0, 0.7, 0, 0, -1, 0, 1.3, 0]);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [0, 0, -1, 1, 0, 0.7, 0, 1.3, 0]);
-    // esquerdaSup
+    Tetra3d.prototype.drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [1, -0.7, 0.7, 0, -0.7, -1, 0, 1, 0]);
+    Tetra3d.prototype.drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [0, -0.7, -1, 1, -0.7, 0.7, 0, 1, 0]);
+    // esquerda
     gl.uniform3f(uNormal, 0, -1, 0);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, 0, 0.7, 0, 1.3, 0, 0, 0, -1]);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, 0, 0.7, 0, 0, -1, 0, 1.3, 0]);
-    // faceSup
-    gl.uniform3f(uNormal, 0, 0, -1);
-    drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, 0, 0.7, 1, 0, 0.7, 0, -1.3, 0]);
-    drawPrimitive(gl.TRIANGLE_FAN, [0.3, 0.8, 0.2, 1], [-1, 0, 0.7, 0, -1.3, 0, 1, 0, 0.7]);
-    // direitaSup
-    gl.uniform3f(uNormal, 0, 1, 0);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [1, 0, 0.7, 0, 0, -1, 0, -1.3, 0]);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 0, 1, 1], [0, 0, -1, 1, 0, 0.7, 0, -1.3, 0]);
-    // esquerdaInf
-    gl.uniform3f(uNormal, 0, -1, 0);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, 0, 0.7, 0, -1.3, 0, 0, 0, -1]);
-    drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, 0, 0.7, 0, 0, -1, 0, -1.3, 0]);
-
-
+    Tetra3d.prototype.drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, -0.7, 0.7, 0, 1, 0, 0, -0.7, -1]);
+    Tetra3d.prototype.drawPrimitive(gl.TRIANGLE_FAN, [0, 1, 0, 0], [-1, -0.7, 0.7, 0, -0.7, -1, 0, 1, 0]);
+    // base
+    gl.uniform3f( uNormal, 0, -1, 0 );
+    Tetra3d.prototype.drawPrimitive( gl.TRIANGLE_FAN, [1,0,0,0], [ -1,-0.7,0.7, 0,-0.7,-1, 1,-0.7,0.7 ]);
+    Tetra3d.prototype.drawPrimitive( gl.TRIANGLE_FAN, [1,0,0,0], [ -1,-0.7,0.7, 1,-0.7,0.7, 0,-0.7,-1 ]);
     gl.uniform1i( uLit, 0 );  // The lines representing the coordinate axes are not lit.
-
     gl.lineWidth(4);
-    drawPrimitive(gl.LINES, [1, 0, 0, 1], [-2, 0, 0, 2, 0, 0]);
-    drawPrimitive(gl.LINES, [0, 1, 0, 1], [0, -2, 0, 0, 2, 0]);
-    drawPrimitive(gl.LINES, [0, 0, 1, 1], [0, 0, -2, 0, 0, 2]);
+    Tetra3d.prototype.drawPrimitive(gl.LINES, [1, 0, 0, 1], [-2, 0, 0, 2, 0, 0]);
+    Tetra3d.prototype.drawPrimitive(gl.LINES, [0, 1, 0, 1], [0, -2, 0, 0, 2, 0]);
+    Tetra3d.prototype.drawPrimitive(gl.LINES, [0, 0, 1, 1], [0, 0, -2, 0, 0, 2]);
     gl.lineWidth(1);
 
 }
@@ -143,7 +119,7 @@ function draw() {
  * string contains the compilation or linking error.  If no error occurs,
  * the program identifier is the return value of the function.
  */
-function createProgram(gl, vertexShaderSource, fragmentShaderSource) {
+Tetra3d.prototype.createProgram = function(gl, vertexShaderSource, fragmentShaderSource) {
 
    var vsh = gl.createShader( gl.VERTEX_SHADER );
    gl.shaderSource(vsh,vertexShaderSource);
@@ -172,7 +148,7 @@ function createProgram(gl, vertexShaderSource, fragmentShaderSource) {
  * to get the shader source from the script elements that contain
  * it.  The parameter should be the id of the script element.
  */
-function getTextContent( elementID ) {
+Tetra3d.prototype.getTextContent = function( elementID ) {
     var element = document.getElementById(elementID);
     var fsource = "";
     var node = element.firstChild;
@@ -191,7 +167,7 @@ function getTextContent( elementID ) {
  * and the WebGL state.  Creates a SimpleView3D object for viewing the
  * cube and installs a mouse handler that lets the user rotate the cube.
  */
-function init() {
+Tetra3d.prototype.init = function() {
    try {
         var canvas = document.getElementById("glcanvas");
         gl = canvas.getContext("webgl");
@@ -201,9 +177,9 @@ function init() {
         if ( ! gl ) {
             throw "Could not create WebGL context.";
         }
-        var vertexShaderSource = getTextContent("vshader");
-        var fragmentShaderSource = getTextContent("fshader");
-        var prog = createProgram(gl,vertexShaderSource,fragmentShaderSource);
+        var vertexShaderSource = Tetra3d.prototype.getTextContent("vshader"); 
+        var fragmentShaderSource = Tetra3d.prototype.getTextContent("fshader");
+        var prog = Tetra3d.prototype.createProgram(gl,vertexShaderSource,fragmentShaderSource);
         gl.useProgram(prog);
         aCoords =  gl.getAttribLocation(prog, "coords");
         uModelview = gl.getUniformLocation(prog, "modelview");
@@ -216,36 +192,14 @@ function init() {
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);  // no need to draw back faces
         document.getElementById("persproj").checked = true;
-        rotator = new SimpleRotator(canvas,draw);
+        rotator = new SimpleRotator(canvas,Tetra3d.prototype.draw);
         rotator.setView( [1.45,0.5,1], [0,1,0], 7 );
    }
    catch (e) {
+    console.log(e);
       document.getElementById("message").innerHTML =
            "Could not initialize WebGL: " + e;
       return;
    }
-   draw();
+   Tetra3d.prototype.draw();
 }
-
-
-function addColor() {
-  rotator.setView( [1.45,0.5,1], [0,1,0], 7 );
-  draw();
-  setTimeout(function(){
-    window.location = "3dLinesLosang.html";
-  });
-}
-    </script>
-</head>
-<body onload="init()">
-    <p name="projectionType" id="persproj" onload="draw()">
-        <button onclick="rotator.setView( [1.45,0.5,1], [0,1,0], 7 ); draw()" style="margin-left:1cm">Reset View</button>
-        <button onclick="addColor()" style="margin-left:1cm">Colorir</button>
-    </p>
-    <noscript><hr><h3>This page requires Javascript and a web browser that supports WebGL</h3><hr></noscript>
-    <div style="cursor:pointer;">
-        <canvas width="600px" height="600px" id="glcanvas" style="background-color:red"></canvas>
-    </div>
-
-</body>
-</html>
