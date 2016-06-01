@@ -1,4 +1,5 @@
 .menu-bar {
+	display:none;
 	background-color: #42A5F5;
 	position:fixed;
 	padding:0px;
@@ -18,4 +19,28 @@
 .popover {
 	width:100px;
 	text-align:center;
+}
+
+.menu-bar div {
+	background-position:center;
+	background-size:90% 90%;
+}
+
+#animateTetra {
+	background-image:url('../../imgs/animacaoTetra.png');
+}
+#linesTetra {
+	background-image:url('../../imgs/tetraLines.png');
+}
+#tetra {
+	background-image:url('../../imgs/tetra3d.png');
+}
+#animateOcta {
+	background-image:url('../../imgs/animacaoOcta.png');
+}
+#linesOcta {
+	background-image:url('../../imgs/octaLines.png');
+}
+#octa {
+	background-image:url('../../imgs/octa3d.png');
 }
